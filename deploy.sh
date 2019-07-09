@@ -73,11 +73,11 @@ fi
 echo Handling ASP.NET Core Web Application deployment.
 
 # 1. Restore nuget packages
-dotnet restore "ShareCar.Api/ShareCar.Api.csproj"
+dotnet restore "Api/Api.csproj"
 exitWithMessageOnError "dotnet restore failed"
 
 # 2. Build and publish
-dotnet publish "ShareCar.Api/ShareCar.Api.csproj" --output "$DEPLOYMENT_TEMP" --configuration Release
+dotnet publish "Api/Api.csproj" --output "$DEPLOYMENT_TEMP" --configuration Release
 exitWithMessageOnError "dotnet publish failed"
 
 # 3. KuduSync
