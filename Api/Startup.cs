@@ -37,7 +37,7 @@ namespace Api
             })
             .AddCookie(options => {
                 options.Cookie.Name = "CustomAuth";
-                options.Cookie.Domain = ".ctsbaltic.com"
+                options.Cookie.Domain = ".ctsbaltic.com";
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
