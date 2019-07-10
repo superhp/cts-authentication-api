@@ -31,7 +31,7 @@ namespace Api.Controllers
         }
         
         [HttpGet("signin/{provider}")]
-        public IActionResult SignIn(string provider, string returnUrl) =>
+        public IActionResult SignIn(string provider, [FromQuery] string returnUrl) =>
             Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, provider);
 
         [HttpGet("signout")]
