@@ -22,13 +22,6 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Fix redirecturi to be HTTPS when logging in
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
-            });
-
-
             services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -61,10 +54,19 @@ namespace Api
                 app.UseDeveloperExceptionPage();
             }
             else
-            {
-                app.UseDeveloperExceptionPage();
+            {                
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+
+                // Fix redirecturi to be HTTPS when logging in
+                app.Use((context, next) =>
+                {
+                    if (context.Request.Headers["x-forwarded-proto"] == "https")
+                    {
+                        context.Request.Scheme = "https";
+                    }
+                    return next();
+                });
             }
 
             app.UseAuthentication();
