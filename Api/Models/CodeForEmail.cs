@@ -2,6 +2,6 @@
 {
     public class CodeForEmail
     {
-        public string CtsEmail { get; set; }
+        public string Email { get; set; }
     }
 }

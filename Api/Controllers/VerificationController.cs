@@ -33,7 +33,7 @@ namespace Api.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var code = _verificationCodeManager.AddNewCode(User.GetSocialEmail());
-                _emailManager.SendVerificationCode(email.CtsEmail, code);
+                _emailManager.SendVerificationCode(email.Email, code);
             }
         }
 
