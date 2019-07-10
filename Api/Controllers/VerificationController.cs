@@ -1,4 +1,5 @@
 ﻿using Api.Helpers;
+using Api.Models;
 using Communication;
 using Db;
 using Microsoft.AspNetCore.Authentication;
@@ -26,13 +27,13 @@ namespace Api.Controllers
 
         }
 
-        [HttpGet("emailCode/{ctsEmail}")]
-        public void GenerateCode(string ctsEmail)
+        [HttpPost("emailCode")]
+        public void GenerateCode([FromBody] CodeForEmail email)
         {
             if (User.Identity.IsAuthenticated)
             {
                 var code = _verificationCodeManager.AddNewCode(User.GetSocialEmail());
-                _emailManager.SendVerificationCode(ctsEmail, code);
+                _emailManager.SendVerificationCode(email.CtsEmail, code);
             }
         }
 
