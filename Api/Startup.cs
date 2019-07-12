@@ -76,7 +76,7 @@ namespace Api
             app.UseHttpsRedirection();
             
             app.UseCors(
-                options => options.WithOrigins("https://ctsbaltic.com")
+                options => options.WithOrigins("https://ctsbaltic.com", "https://bla.ctsbaltic.com")
                     .AllowAnyMethod()
                     .AllowCredentials()
                     .AllowAnyHeader()
