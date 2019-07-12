@@ -76,17 +76,17 @@ namespace Api
             app.UseHttpsRedirection();
             
             app.UseCors(
-                options => options.WithOrigins(Configuration["CorsAllowedOrigins"].Split(", "))
+                options => options.WithOrigins("https://ctsbaltic.com")
                     .AllowAnyMethod()
                     .AllowCredentials()
                     .AllowAnyHeader()
             );
 
-    //        options.AddPolicy("AllowSubdomain",
-    //builder =>
-    //{
-    //    builder.SetIsOriginAllowedToAllowWildcardSubdomains();
-    //});
+            options.AddPolicy("AllowSubdomain",
+                builder =>
+                {
+        builder.SetIsOriginAllowedToAllowWildcardSubdomains();
+    });
 
             app.UseMvc();
         }
