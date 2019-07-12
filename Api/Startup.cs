@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace Api
 {
@@ -75,7 +76,7 @@ namespace Api
             app.UseHttpsRedirection();
             
             app.UseCors(
-                options => options.WithOrigins(Configuration["Cors:AllowedOrigins"])
+                options => options.WithOrigins(Configuration.GetSection("CorsAllowedOrigins").GetChildren().Select(x => x.Value).ToArray())
                 .AllowAnyMethod()
                 .AllowCredentials()
                 .AllowAnyHeader()
