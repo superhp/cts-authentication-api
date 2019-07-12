@@ -76,12 +76,18 @@ namespace Api
             app.UseHttpsRedirection();
             
             app.UseCors(
-                options => options.WithOrigins(Configuration.GetSection("CorsAllowedOrigins").GetChildren().Select(x => x.Value).ToArray())
-                .AllowAnyMethod()
-                .AllowCredentials()
-                .AllowAnyHeader()
+                options => options.WithOrigins(Configuration["CorsAllowedOrigins"].Split(", "))
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .AllowAnyHeader()
             );
-            
+
+    //        options.AddPolicy("AllowSubdomain",
+    //builder =>
+    //{
+    //    builder.SetIsOriginAllowedToAllowWildcardSubdomains();
+    //});
+
             app.UseMvc();
         }
     }
