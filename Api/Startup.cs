@@ -75,9 +75,10 @@ namespace Api
             app.UseHttpsRedirection();
             
             app.UseCors(
-                options => options.WithOrigins("https://ctsbaltic.com", 
-                                               "https://*.ctsbaltic.com")
+                options => options.WithOrigins(Configuration["Cors:AllowedOrigins"])
                 .AllowAnyMethod()
+                .AllowCredentials()
+                .AllowAnyHeader()
             );
             
             app.UseMvc();
