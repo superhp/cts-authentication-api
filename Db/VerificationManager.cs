@@ -51,5 +51,10 @@ namespace Db
                 token = queryResult.ContinuationToken;
             } while (token != null);
         }
+
+        public bool IsVerified(string socialEmail)
+        {
+            return _verifications.Any(x => x.RowKey == socialEmail);
+        }
     }
 }

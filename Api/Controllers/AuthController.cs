@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using Db;
 
 namespace Api.Controllers
 {
@@ -11,7 +12,7 @@ namespace Api.Controllers
     public class AuthController : Controller
     {
         private readonly IConfiguration _configuration;
-
+        private readonly IVerificationManager _verificationManager;
         public AuthController(IConfiguration configuration)
         {
             _configuration = configuration;            
@@ -24,9 +25,12 @@ namespace Api.Controllers
             {
                 return Unauthorized(); 
             }
+            var socialEmail = UserHelper.GetSocialEmail(User);
+            var isVerified = _verificationManager.IsVerified(socialEmail);
             return new User
             {
-                Name = User.Identity.Name
+                Name = User.Identity.Name,
+                IsVerified = isVerified
             };            
         }
         
