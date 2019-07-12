@@ -14,9 +14,10 @@ namespace Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IVerificationManager _verificationManager;
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, IVerificationManager verificationManager)
         {
-            _configuration = configuration;            
+            _configuration = configuration;
+            _verificationManager = verificationManager;
         }
 
         [HttpGet("user")]

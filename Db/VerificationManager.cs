@@ -16,6 +16,7 @@ namespace Db
             var account = CloudStorageAccount.Parse(configuration["StorageConnectionString"]);
             var tableClient = account.CreateCloudTableClient();
             _table = tableClient.GetTableReference("verifications");
+            ReadAllVerificationsAsync().Wait();
         }
 
         public async Task AddNewVerificationAsync(string socialEmail, string ctsEmail)
@@ -33,10 +34,6 @@ namespace Db
 
         public async Task<string> GetCtsEmailAsync(string socialEmail)
         {
-            if (_verifications == null)
-            {
-                await ReadAllVerificationsAsync();
-            }
             return _verifications.SingleOrDefault(x => x.RowKey == socialEmail)?.CtsEmail;
         }
 
