@@ -41,7 +41,15 @@ namespace Api
                 options.Cookie.Domain = ".ctsbaltic.com";
             });
 
-            services.AddCors(); 
+            services.AddCors(options => 
+                options.AddPolicy("AllowSubdomain",
+                    builder =>
+                    {
+                        builder.SetIsOriginAllowedToAllowWildcardSubdomains();
+                    }
+                )
+            ); 
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IVerificationManager, VerificationManager>();
@@ -76,17 +84,11 @@ namespace Api
             app.UseHttpsRedirection();
             
             app.UseCors(
-                options => options.WithOrigins("https://ctsbaltic.com", "https://bla.ctsbaltic.com")
+                options => options.WithOrigins("https://ctsbaltic.com")
                     .AllowAnyMethod()
                     .AllowCredentials()
                     .AllowAnyHeader()
-            );
-
-    //        options.AddPolicy("AllowSubdomain",
-    //            builder =>
-    //            {
-    //    builder.SetIsOriginAllowedToAllowWildcardSubdomains();
-    //});
+            );            
 
             app.UseMvc();
         }
