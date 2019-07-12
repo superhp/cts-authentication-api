@@ -40,6 +40,7 @@ namespace Api
                 options.Cookie.Domain = ".ctsbaltic.com";
             });
 
+            services.AddCors(); 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IVerificationManager, VerificationManager>();
@@ -72,6 +73,11 @@ namespace Api
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
+            
+            app.UseCors(
+                options => options.WithOrigins("https://ctsbaltic.com", "https://*.ctsbaltic.com").AllowAnyMethod()
+            );
+            
             app.UseMvc();
         }
     }
