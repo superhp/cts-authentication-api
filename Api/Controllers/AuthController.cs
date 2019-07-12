@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Db;
+using Api.Helpers;
 
 namespace Api.Controllers
 {
