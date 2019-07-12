@@ -82,11 +82,11 @@ namespace Api
                     .AllowAnyHeader()
             );
 
-            options.AddPolicy("AllowSubdomain",
-                builder =>
-                {
-        builder.SetIsOriginAllowedToAllowWildcardSubdomains();
-    });
+    //        options.AddPolicy("AllowSubdomain",
+    //            builder =>
+    //            {
+    //    builder.SetIsOriginAllowedToAllowWildcardSubdomains();
+    //});
 
             app.UseMvc();
         }
