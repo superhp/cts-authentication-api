@@ -3,10 +3,12 @@ using Db;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AzureStorage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 
 namespace Api
@@ -23,32 +25,40 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(options => {
+            services.AddDataProtection()
+                .SetApplicationName("CtsBaltic")
+                .PersistKeysToAzureBlobStorage(new Uri(Configuration["KeysStorage"]));
+
+            services.AddAuthentication(options =>
+            {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
-            .AddFacebook(options => {
+            .AddFacebook(options =>
+            {
                 options.AppId = Configuration["AuthenticationProviders:Facebook:AppId"];
                 options.AppSecret = Configuration["AuthenticationProviders:Facebook:AppSecret"];
             })
-            .AddGoogle(options => {
+            .AddGoogle(options =>
+            {
                 options.ClientId = Configuration["AuthenticationProviders:Google:ClientId"];
                 options.ClientSecret = Configuration["AuthenticationProviders:Google:ClientSecret"];
             })
-            .AddCookie(options => {
+            .AddCookie(options =>
+            {
                 options.Cookie.Name = "CustomAuth";
                 options.Cookie.Domain = ".ctsbaltic.com";
             });
 
-            services.AddCors(options => 
+            services.AddCors(options =>
                 options.AddPolicy("AllowSubdomain",
                     builder =>
                     {
                         builder.SetIsOriginAllowedToAllowWildcardSubdomains();
                     }
                 )
-            ); 
+            );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -65,7 +75,7 @@ namespace Api
                 app.UseDeveloperExceptionPage();
             }
             else
-            {                
+            {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
 
@@ -82,13 +92,13 @@ namespace Api
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
-            
+
             app.UseCors(
                 options => options.WithOrigins("https://ctsbaltic.com")
                     .AllowAnyMethod()
                     .AllowCredentials()
                     .AllowAnyHeader()
-            );            
+            );
 
             app.UseMvc();
         }
