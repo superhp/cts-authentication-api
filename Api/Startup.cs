@@ -31,7 +31,7 @@ namespace Api
             var tokenProvider = new AzureServiceTokenProvider();
             var token = await tokenProvider.GetAccessTokenAsync("https://storage.azure.com/");
             var credentials = new StorageCredentials(new TokenCredential(token));
-            var storageAccount = new CloudStorageAccount(credentials, "mystorageaccount", "core.windows.net", useHttps: true);
+            var storageAccount = new CloudStorageAccount(credentials, "ctsinternalstorage", "core.windows.net", useHttps: true);
             var client = storageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference("my-key-container");
 
