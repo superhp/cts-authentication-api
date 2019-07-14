@@ -27,7 +27,8 @@ namespace Api
         {
             services.AddDataProtection()
                 .SetApplicationName("CtsBaltic")
-                .PersistKeysToAzureBlobStorage(new Uri(Configuration["KeysStorage"]));
+                .PersistKeysToAzureBlobStorage(new Uri(Configuration["KeysStorage"]))
+                .ProtectKeysWithCertificate("7A5F49E507D0472CD33C50BC41537061C2953CC1");
 
             services.AddAuthentication(options =>
             {
