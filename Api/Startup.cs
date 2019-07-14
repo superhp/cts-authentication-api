@@ -8,11 +8,6 @@ using Microsoft.AspNetCore.DataProtection.AzureStorage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage;
 
 namespace Api
 {
@@ -26,22 +21,10 @@ namespace Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public async System.Threading.Tasks.Task ConfigureServicesAsync(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            var tokenProvider = new AzureServiceTokenProvider();
-            var token = await tokenProvider.GetAccessTokenAsync("https://storage.azure.com/");
-            var credentials = new StorageCredentials(new TokenCredential(token));
-            var storageAccount = new CloudStorageAccount(credentials, "ctsinternalstorage", "core.windows.net", useHttps: true);
-            var client = storageAccount.CreateCloudBlobClient();
-            var container = client.GetContainerReference("my-key-container");
-
-            // optional - provision the container automatically
-            await container.CreateIfNotExistsAsync();
-
-            services.AddDataProtection()
-                .SetApplicationName("CtsBaltic")
-                .PersistKeysToAzureBlobStorage(container, "keys.xml");
-                //.PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"C:\Dev\test\keys.txt"));
+            //services.AddDataProtection()
+                //.SetApplicationName("CtsBaltic")    
                 //.PersistKeysToAzureBlobStorage(new Uri("https://ctsinternalstorage.blob.core.windows.net/ctsinternalauthblob/keys.txt?sp=rcwd&st=2019-07-14T18:16:53Z&se=2019-07-15T02:16:53Z&spr=https&sv=2018-03-28&sig=SOZxrECXA2cCs3SaESMHtN%2FkjADBG0PsXNAxu1FkBl4%3D&sr=b"));
 
             services.AddAuthentication(options =>

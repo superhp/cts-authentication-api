@@ -32,7 +32,7 @@ namespace Db
             _verifications.Add(verification);
         }
 
-        public async Task<string> GetCtsEmailAsync(string socialEmail)
+        public string GetCtsEmail(string socialEmail)
         {
             return _verifications.SingleOrDefault(x => x.RowKey == socialEmail)?.CtsEmail;
         }
