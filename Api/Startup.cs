@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.IO;
 
 namespace Api
 {
@@ -27,7 +28,7 @@ namespace Api
         {
             services.AddDataProtection()
                 .SetApplicationName("CtsBaltic")
-                .PersistKeysToAzureBlobStorage(new Uri(Configuration["KeysStorage"]));
+                .PersistKeysToFileSystem(new DirectoryInfo(@"\\home\shared\"));
 
             services.AddAuthentication(options =>
             {
