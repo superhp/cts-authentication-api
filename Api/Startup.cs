@@ -28,7 +28,7 @@ namespace Api
         {
             services.AddDataProtection()
                 .SetApplicationName("CtsBaltic")
-                .PersistKeysToFileSystem(new DirectoryInfo(@"\\home\shared\"));
+                .PersistKeysToFileSystem(new DirectoryInfo(@"\home\shared\"));
 
             services.AddAuthentication(options =>
             {
