@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Microsoft.Extensions.Logging;
 
 namespace Api
 {
@@ -49,6 +48,7 @@ namespace Api
             {
                 options.Cookie.Name = Configuration["CookieName"];
                 options.Cookie.Domain = Configuration["CookieDomains"];
+                options.Cookie.Path = "/";
             });
 
             services.AddCors(options =>

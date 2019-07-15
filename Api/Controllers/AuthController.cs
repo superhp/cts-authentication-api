@@ -10,7 +10,8 @@ using Api.Helpers;
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthController : Controller
+    [ApiController]
+    public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly IVerificationManager _verificationManager;
