@@ -33,9 +33,7 @@ namespace Api.Controllers
             return new User
             {
                 Name = User.Identity.Name,
-                IsVerified = isVerified,
-                SocialEmail = socialEmail,
-                CtsEmail = ctsEmail
+                IsVerified = isVerified
             };            
         }
         

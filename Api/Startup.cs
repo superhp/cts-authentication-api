@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.AzureStorage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace Api
 {
@@ -23,9 +24,12 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDataProtection()
-                //.SetApplicationName("CtsBaltic")    
-                //.PersistKeysToAzureBlobStorage(new Uri("https://ctsinternalstorage.blob.core.windows.net/ctsinternalauthblob/keys.txt?sp=rcwd&st=2019-07-14T18:16:53Z&se=2019-07-15T02:16:53Z&spr=https&sv=2018-03-28&sig=SOZxrECXA2cCs3SaESMHtN%2FkjADBG0PsXNAxu1FkBl4%3D&sr=b"));
+            services.AddLogging(configure => configure.SetMinimumLevel(LogLevel.Trace).AddConsole());
+
+            services.AddDataProtection()
+                .SetApplicationName(Configuration["AppName"])
+                .PersistKeysToAzureBlobStorage(new Uri(Configuration["KeysStorage"]))
+              ;
 
             services.AddAuthentication(options =>
             {
@@ -45,8 +49,8 @@ namespace Api
             })
             .AddCookie(options =>
             {
-                options.Cookie.Name = "CustomAuth";
-                options.Cookie.Domain = ".ctsbaltic.com";
+                options.Cookie.Name = Configuration["CookieName"];
+                options.Cookie.Domain = Configuration["AllowedDomains"];
             });
 
             services.AddCors(options =>
@@ -93,7 +97,7 @@ namespace Api
             app.UseHttpsRedirection();
 
             app.UseCors(
-                options => options.WithOrigins("https://ctsbaltic.com")
+                options => options.WithOrigins(Configuration["CorsOrigins"])
                     .AllowAnyMethod()
                     .AllowCredentials()
                     .AllowAnyHeader()
