@@ -50,7 +50,7 @@ namespace Api
             .AddCookie(options =>
             {
                 options.Cookie.Name = Configuration["CookieName"];
-                options.Cookie.Domain = Configuration["AllowedDomains"];
+                options.Cookie.Domain = Configuration["CookieDomains"];
             });
 
             services.AddCors(options =>
