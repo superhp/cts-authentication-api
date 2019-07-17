@@ -16,8 +16,6 @@ namespace Communication
 
         public void SendVerificationCode(string emailAddress, int code)
         {
-            System.Diagnostics.Trace.WriteLine("Entering mail sending method");
-
             var msg = new SendGridMessage();
             msg.From = new EmailAddress(_configuration["SendGrid:From"], _configuration["SendGrid:FromName"]);
             var recipients = new List<EmailAddress>
@@ -29,18 +27,8 @@ namespace Communication
             msg.AddContent(MimeType.Text, $"Your verification code is: {code}. You can activate your account by going to: {_configuration["CodeVerificationLink"]}{code}.");
 
             var sendGridClient = new SendGridClient(_configuration["SendGrid:APIKey"]);
-
+            System.Diagnostics.Trace.WriteLine("------------------------------------");
            var response = sendGridClient.SendEmailAsync(msg);
-
-            System.Diagnostics.Trace.WriteLine("-------------111------------------------ \n");
-            System.Diagnostics.Debug.WriteLine("-------------222------------------------ \n");
-
-
-            throw new System.Exception(response.Result.StatusCode.ToString());
-
-            System.Diagnostics.Trace.WriteLine("------------------------------------- \n");
-            System.Diagnostics.Trace.WriteLine("Send grid mail sending response: " + response.Result.ToString());
-
         }
     }
 }
