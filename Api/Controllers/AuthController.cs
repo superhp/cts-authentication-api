@@ -24,7 +24,6 @@ namespace Api.Controllers
         [HttpGet("user")]
         public ActionResult<User> GetSignedInUserAsync()
         {
-            System.Diagnostics.Trace.WriteLine("------------------------------------");
             if (!User.Identity.IsAuthenticated)
             {
                 return Unauthorized(); 

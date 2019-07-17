@@ -27,8 +27,8 @@ namespace Communication
             msg.AddContent(MimeType.Text, $"Your verification code is: {code}. You can activate your account by going to: {_configuration["CodeVerificationLink"]}{code}.");
 
             var sendGridClient = new SendGridClient(_configuration["SendGrid:APIKey"]);
-            System.Diagnostics.Trace.WriteLine("------------------------------------");
            var response = sendGridClient.SendEmailAsync(msg);
+            
         }
     }
 }
