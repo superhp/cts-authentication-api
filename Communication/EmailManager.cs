@@ -16,6 +16,8 @@ namespace Communication
 
         public void SendVerificationCode(string emailAddress, int code)
         {
+            System.Diagnostics.Trace.WriteLine("Entering mail sending method");
+
             var msg = new SendGridMessage();
             msg.From = new EmailAddress(_configuration["SendGrid:From"], _configuration["SendGrid:FromName"]);
             var recipients = new List<EmailAddress>
