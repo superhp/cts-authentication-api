@@ -30,21 +30,6 @@ namespace Api.Controllers
         [HttpPost("emailCode")]
         public void GenerateCode([FromBody] CodeForEmail email)
         {
-            var msg = new SendGridMessage();
-            msg.From = new EmailAddress(_configuration["SendGrid:From"], _configuration["SendGrid:FromName"]);
-            var recipients = new List<EmailAddress>
-            {
-                new EmailAddress(emailAddress)
-            };
-            msg.AddTos(recipients);
-            msg.Subject = "Verification";
-            msg.AddContent(MimeType.Text, $"Your verification code is: {code}. You can activate your account by going to: {_configuration["CodeVerificationLink"]}{code}.");
-
-            var sendGridClient = new SendGridClient(_configuration["SendGrid:APIKey"]);
-            var response = sendGridClient.SendEmailAsync(msg);
-
-            return Ok(response.Status.ToString());
-
             if (User.Identity.IsAuthenticated)
             {
                 var code = _verificationCodeManager.AddNewCode(User.GetSocialEmail());
