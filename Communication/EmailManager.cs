@@ -28,7 +28,10 @@ namespace Communication
 
             var sendGridClient = new SendGridClient(_configuration["SendGrid:APIKey"]);
 
-            sendGridClient.SendEmailAsync(msg);
+           var response = sendGridClient.SendEmailAsync(msg);
+            System.Diagnostics.Trace.WriteLine("------------------------------------- \n");
+            System.Diagnostics.Trace.WriteLine("------------------------------------- \n");
+            System.Diagnostics.Trace.WriteLine("Send grid mail sending response: " + response.Result.ToString());
 
         }
     }
