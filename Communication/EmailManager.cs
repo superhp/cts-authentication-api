@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Net.Mail;
-using System.Net.Mime;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System.Collections.Generic;
 
 namespace Communication
 {
@@ -15,18 +16,20 @@ namespace Communication
 
         public void SendVerificationCode(string emailAddress, int code)
         {
-            var mailMsg = new MailMessage();
-            mailMsg.To.Add(new MailAddress(emailAddress));
-            mailMsg.From = new MailAddress(_configuration["Smtp:From"], _configuration["Smtp:FromName"]);
-            mailMsg.Subject = "Verification";
-            var text = $"Your verification code is: {code}. You can activate your account by going to: {_configuration["CodeVerificationLink"]}{code}.";
-            mailMsg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Plain));
+            var msg = new SendGridMessage();
+            msg.From = new EmailAddress(_configuration["SendGrid:From"], _configuration["SendGrid:FromName"]);
+            var recipients = new List<EmailAddress>
+            {
+                new EmailAddress(emailAddress)
+            };
+            msg.AddTos(recipients);
+            msg.Subject = "Verification";
+            msg.AddContent(MimeType.Text, $"Your verification code is: {code}. You can activate your account by going to: {_configuration["CodeVerificationLink"]}{code}.");
 
-            var smtpClient = new SmtpClient(_configuration["Smtp:Server"], int.Parse(_configuration["Smtp:Port"]));
-            var credentials = new System.Net.NetworkCredential(_configuration["Smtp:Username"], _configuration["Smtp:Password"]);
-            smtpClient.Credentials = credentials;
+            var sendGridClient = new SendGridClient(_configuration["SendGrid:APIKey"]);
 
-            smtpClient.Send(mailMsg);
+            sendGridClient.SendEmailAsync(msg);
+
         }
     }
 }
