@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,17 +20,15 @@ namespace Db
             ReadAllVerificationsAsync().Wait();
         }
 
-        public async Task AddNewVerificationAsync(string socialEmail, string ctsEmail)
+        public async Task<Guid> AddNewVerificationAsync(string socialEmail, string ctsEmail)
         {
-            if (_verifications.Any(x => x.RowKey == socialEmail))
-            {
-                return; 
-            }
-
-            var verification = new Verification(socialEmail, ctsEmail);
+            var newUserGuid = new Guid();
+            var verification = new Verification(newUserGuid, socialEmail, ctsEmail);
 
             await _table.ExecuteAsync(TableOperation.Insert(verification));
             _verifications.Add(verification);
+
+            return newUserGuid;
         }
 
         public string GetCtsEmail(string socialEmail)
