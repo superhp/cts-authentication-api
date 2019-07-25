@@ -30,7 +30,6 @@ namespace Api.Controllers
             }
             var socialEmail = UserHelper.GetSocialEmail(User);
             var isVerified = _verificationManager.IsVerified(socialEmail);
-            var ctsEmail = isVerified ? _verificationManager.GetCtsEmail(socialEmail) : "";
             return new User
             {
                 Name = User.Identity.Name,

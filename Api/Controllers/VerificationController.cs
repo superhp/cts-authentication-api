@@ -28,12 +28,13 @@ namespace Api.Controllers
         }
 
         [HttpPost("emailCode")]
-        public void GenerateCode([FromBody] CodeForEmail email)
+        public async Task<IActionResult> GenerateCodeAsync([FromBody] CodeForEmail email)
         {
             if (User.Identity.IsAuthenticated)
             {
                 var code = _verificationCodeManager.AddNewCode(User.GetSocialEmail());
-                _emailManager.SendVerificationCode(email.Email, code);
+                await _emailManager.SendVerificationCodeAsync(email.Email, code);
+                return Ok();
             }
             else
             {
@@ -51,10 +52,10 @@ namespace Api.Controllers
             var (isCodeCorrect, ctsEmail) = _verificationCodeManager.CheckVerificationCode(User.GetSocialEmail(), code);
             if (isCodeCorrect)
             {
-                await _verificationReader.AddNewVerificationAsync(User.GetSocialEmail(), ctsEmail);
+                var newUserGuid = await _verificationReader.AddNewVerificationAsync(User.GetSocialEmail(), ctsEmail);
 
                 var user = User.Identity as ClaimsIdentity;
-                user.AddClaim(new Claim("CtsEmail", ctsEmail));
+                user.AddClaim(new Claim("UserGuid", newUserGuid.ToString()));
                 await HttpContext.SignInAsync(User);
 
                 return Redirect(_configuration["LoginPageLink"]); 

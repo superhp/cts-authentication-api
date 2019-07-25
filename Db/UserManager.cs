@@ -1,39 +1,24 @@
 ﻿using Microsoft.Azure.Cosmos.Table;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Configuration;
+using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Db
 {
-    public class VerificationManager : IVerificationManager
+    public class UserManager : IUserManager
     {
         private List<Verification> _verifications;
         private readonly CloudTable _table;
 
-        public VerificationManager(IConfiguration configuration)
+        public UserManager(IConfiguration configuration)
         {
             var account = CloudStorageAccount.Parse(configuration["StorageConnectionString"]);
             var tableClient = account.CreateCloudTableClient();
             _table = tableClient.GetTableReference("verifications");
             ReadAllVerificationsAsync().Wait();
-        }
-
-        public async Task<Guid> AddNewVerificationAsync(string socialEmail, string ctsEmail)
-        {
-            var newUserGuid = Guid.NewGuid();
-            var verification = new Verification(newUserGuid, socialEmail, ctsEmail);
-
-            await _table.ExecuteAsync(TableOperation.Insert(verification));
-            _verifications.Add(verification);
-
-            return newUserGuid;
-        }
-
-        public string GetCtsEmail(string socialEmail)
-        {
-            return _verifications.SingleOrDefault(x => x.RowKey == socialEmail)?.CtsEmail;
         }
 
         private async Task ReadAllVerificationsAsync()
@@ -47,10 +32,10 @@ namespace Db
                 token = queryResult.ContinuationToken;
             } while (token != null);
         }
-
-        public bool IsVerified(string socialEmail)
+        public Guid GetUserGuid(string ctsEmail)
         {
-            return _verifications.Any(x => x.RowKey == socialEmail);
+            var verification = _verifications.SingleOrDefault(x => x.CtsEmail == ctsEmail);
+            return Guid.Parse(verification.RowKey);
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace Communication
+﻿using System.Threading.Tasks;
+
+namespace Communication
 {
     public interface IEmailManager
     {
-        void SendVerificationCode(string emailAddress, int code);
+        Task SendVerificationCodeAsync(string emailAddress, int code);
     }
 }

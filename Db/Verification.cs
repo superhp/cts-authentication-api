@@ -9,14 +9,16 @@ namespace Db
         {
         }
 
-        public Verification(string socialEmail, string ctsEmail)
+        public Verification(Guid guid, string socialEmail, string ctsEmail)
         {
             PartitionKey = "Default";
-            RowKey = socialEmail;
+            RowKey = guid.ToString();
+            SocialEmail = socialEmail;
             CtsEmail = ctsEmail;
             Created = DateTime.Now;
         }
 
+        public string SocialEmail { get; set; }
         public string CtsEmail { get; set; }
         public DateTime Created { get; set; }
     }
